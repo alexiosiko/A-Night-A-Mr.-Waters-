@@ -11,8 +11,8 @@ public class PlayerCamera : MonoBehaviour
     private float yRotation;
     private void Update()
     {   
-        if (StatusManager.instance.freeze == true)
-            return;
+        // if (StatusManager.instance.freeze == true)
+        //     return;
 
         float mouseX = Input.GetAxis("Mouse X") * sensX;
         float mouseY = Input.GetAxis("Mouse Y") * sensY;

@@ -10,27 +10,39 @@ public class Hideable : Interactable
         if (StatusManager.instance.currentHiddenGameObject == null)
             EnterHide();
     }
+    
+    
     public void ExitHide()
     {
-        // Enable collider
-        // GetComponent<Collider>().enabled = true;
+        // Enable player collider
+        playerCollider.enabled = true;
 
         // Change crosshair
         StatusManager.instance.ChangeCrosshair(0);
 
-        // Animate camera
-        Camera.main.transform.DOLocalMove(Vector3.zero, 0.75f);
-        Camera.main.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.75f);
-
         // Change status
         StatusManager.instance.Unfreeze(0.75f);
         StatusManager.instance.currentHiddenGameObject = null;
+    
+         // Animate camera
+        // Camera.main.transform.DOLocalMove(Vector3.zero, 0.75f);
+        // Camera.main.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.75f);
+
+        // Animate player
+        player.transform.DOMove(beforeHidePosition, 0.75f);
+        // player.transform.DORotate(beforeHideRotation + new Vector3(0, 180, 0), 0.75f);
     }
+    Vector3 beforeHidePosition;
+    Vector3 beforeHideRotation;
     void EnterHide()
     {
-        // Disable collider
-        // GetComponent<Collider>().enabled = false;
-        
+        // Store beforeHidePosition
+        beforeHidePosition = player.transform.position;
+        beforeHideRotation = player.transform.eulerAngles;
+
+        // Disable player collider
+        playerCollider.enabled = false;
+
         // Change crosshair
         StatusManager.instance.ChangeCrosshair(3);
 
@@ -39,15 +51,21 @@ public class Hideable : Interactable
         StatusManager.instance.currentHiddenGameObject = gameObject;
 
         // Animate camera
-        Camera.main.transform.DOMove(spot.position, 0.75f);
-        Camera.main.transform.DORotate(spot.eulerAngles, 0.75f);
+        // Camera.main.transform.DOMove(spot.position, 0.75f);
+        // Camera.main.transform.DORotate(spot.eulerAngles, 0.75f);
+
+        // Animate player
+        player.transform.DOMove(spot.position, 0.75f);
+        // player.transform.DORotate(spot.eulerAngles, 0.75f);
     }
 
     void Start()
     {
-        player = GameObject.FindWithTag("Player").transform;
+        playerCollider = GameObject.FindWithTag("Player").GetComponent<Collider>();
         spot = transform.GetChild(0).transform;
+        player = GameObject.FindWithTag("Player").transform;
     }
+    Transform player;
     Transform spot;
-    public Transform player;
+    Collider playerCollider;
 }

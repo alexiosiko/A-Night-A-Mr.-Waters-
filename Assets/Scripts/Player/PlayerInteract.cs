@@ -14,6 +14,7 @@ public class PlayerInteract : MonoBehaviour
         // If currently hiding
         if (Input.GetKeyDown(KeyCode.E) && StatusManager.instance.currentHiddenGameObject != null)
             StatusManager.instance.currentHiddenGameObject.GetComponent<Hideable>().ExitHide();
+        
         // Get interact input
         else if (Input.GetKeyDown("e") && StatusManager.instance.freeze == false
             || Input.GetMouseButtonDown(0) && StatusManager.instance.freeze == false)
@@ -26,9 +27,8 @@ public class PlayerInteract : MonoBehaviour
     {
         if (Physics.Raycast(cameraPosition.position, cameraPosition.transform.forward, out RaycastHit hit, reachDistance, LayerMask.GetMask("Interactable")))
         {
-            Interactable i = hit.collider.GetComponentInParent <Interactable> ();
-            if (i.cursor != null)
-                StatusManager.instance.ChangeCrosshair(2);
+            Interactable i = hit.collider.GetComponentInParent<Interactable>();
+            StatusManager.instance.ChangeCrosshair(i.cursorIndex);
         }
         else
             StatusManager.instance.ChangeCrosshair(0);
@@ -38,9 +38,10 @@ public class PlayerInteract : MonoBehaviour
     {
         if (Physics.Raycast(cameraPosition.position, cameraPosition.transform.forward, out RaycastHit hit, reachDistance, LayerMask.GetMask("Interactable")))
         {
-            Interactable i = hit.collider.GetComponentInParent <Interactable> ();
+            Interactable i = hit.collider.GetComponentInParent<Interactable>();
             i.Action();
         }
     }
+
     public Transform cameraPosition;
 }

@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour
 {
-    public Sprite cursor = null;
-    public abstract void Action();
+    public int cursorIndex = 0;
+    public virtual void Action() {}
 }
