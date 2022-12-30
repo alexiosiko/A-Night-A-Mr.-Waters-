@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class Hideable : Interactable
 {
@@ -31,6 +34,10 @@ public class Hideable : Interactable
         // Animate player
         player.transform.DOMove(beforeHidePosition, 0.75f);
         // player.transform.DORotate(beforeHideRotation + new Vector3(0, 180, 0), 0.75f);
+
+        // Post processing
+        if (volume.profile.TryGet(out UnityEngine.Rendering.Universal.Vignette vignette) == true)
+            vignette.intensity.Override(0);
     }
     Vector3 beforeHidePosition;
     Vector3 beforeHideRotation;
@@ -40,8 +47,9 @@ public class Hideable : Interactable
         beforeHidePosition = player.transform.position;
         beforeHideRotation = player.transform.eulerAngles;
 
-        // Disable player collider
-        playerCollider.enabled = false;
+        // Disable player collider if not seen
+        if (ownerMovement.canSeePlayer == false)
+            playerCollider.enabled = false;
 
         // Change crosshair
         StatusManager.instance.ChangeCrosshair(3);
@@ -57,6 +65,10 @@ public class Hideable : Interactable
         // Animate player
         player.transform.DOMove(spot.position, 0.75f);
         // player.transform.DORotate(spot.eulerAngles, 0.75f);
+
+        // Post processing
+        if (volume.profile.TryGet(out UnityEngine.Rendering.Universal.Vignette vignette) == true)
+            vignette.intensity.Override(0.45f);
     }
 
     void Start()
@@ -64,8 +76,13 @@ public class Hideable : Interactable
         playerCollider = GameObject.FindWithTag("Player").GetComponent<Collider>();
         spot = transform.GetChild(0).transform;
         player = GameObject.FindWithTag("Player").transform;
+        volume = FindObjectOfType<Volume>();
+        ownerMovement = FindObjectOfType<OwnerMovement>();
     }
+    OwnerMovement ownerMovement;
+    Volume volume;
     Transform player;
     Transform spot;
     Collider playerCollider;
+    
 }

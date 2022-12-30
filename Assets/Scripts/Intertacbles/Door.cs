@@ -24,16 +24,36 @@ public class Door : Interactable
         }
         else // Try and unlock
         {
-            if (InventoryManager.instance.GetItem(keyName) == true)
+            GameObject currentItem = PlayerInventory.instance.GetCurrentItem();
+            
+            // If empty hand, do NOTHING    
+            if (currentItem == null)
+                return;
+
+            Collectable collectable = currentItem.GetComponent<Collectable>();
+            if (collectable.itemId == keyName)
             {
                 // Unlock
                 locked = false;
+
+                // Delete item
+                PlayerInventory.instance.DestoryCurrentItem();
             }
             else // Wiggle door
             {
                 
             }
+
         }
+    }
+    public void OpenDoor()
+    {
+        if (locked == true || opened == true)
+            return;
+        
+        animator.Play("Open");
+        Invoke("ChangeDoorStatus", 0.4f); // 0.4f is door animation time
+        
     }
     void ChangeDoorStatus()
     {
