@@ -6,7 +6,7 @@ public class Door : Interactable
 {
     public bool locked = false;
     public string keyName = "";
-    bool opened = false;
+    public bool opened = false;
     public override void Action()
     {
         if (locked == false) // Is not locked
@@ -65,6 +65,7 @@ public class Door : Interactable
     void Start()
     {
         animator = GetComponentInParent<Animator>();
+        cursorIndex = 4;
     }
     Animator animator;
 }

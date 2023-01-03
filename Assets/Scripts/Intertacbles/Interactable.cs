@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-    public int cursorIndex = 0;
+    [HideInInspector] public int cursorIndex = 0;
     public virtual void Action() {}
 }

@@ -21,6 +21,10 @@ public class PlayerMovement : MonoBehaviour
         // If interrupted
         if (StatusManager.instance.freeze == true)
             return;
+        
+        // If controller is disabled (Basically means if hidden)
+        if (controller.enabled == false)
+            return;
             
         // Don't ask me i copied this from somewhere
         if (controller.isGrounded && velocity.y < 0)

@@ -77,9 +77,11 @@ public class Hideable : Interactable
         spot = transform.GetChild(0).transform;
         player = GameObject.FindWithTag("Player").transform;
         volume = FindObjectOfType<Volume>();
-        ownerMovement = FindObjectOfType<OwnerMovement>();
+        ownerMovement = FindObjectOfType<OwnerBehaviour>();
+
+        cursorIndex = 2;
     }
-    OwnerMovement ownerMovement;
+    OwnerBehaviour ownerMovement;
     Volume volume;
     Transform player;
     Transform spot;

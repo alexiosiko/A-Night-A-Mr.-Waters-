@@ -9,13 +9,17 @@ public class OwnerCollider : MonoBehaviour
         Door door = other.gameObject.GetComponent<Door>();
         if (door != null)
         {
+            // If door is already opened then STOP
+            if (door.opened == true)
+                return;
+
             door.OpenDoor();
             owner.Freeze(0.75f);    
         }
     }
     void Start()
     {
-        owner = GetComponentInParent<OwnerMovement>();
+        owner = GetComponentInParent<OwnerBehaviour>();
     }
-    OwnerMovement owner;
+    OwnerBehaviour owner;
 }

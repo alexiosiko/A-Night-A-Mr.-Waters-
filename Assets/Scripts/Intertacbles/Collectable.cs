@@ -20,5 +20,9 @@ public class Collectable : Interactable
     {
         inventoryTransform = GameObject.FindWithTag("Inventory").transform;
     }
+    void Start()
+    {
+        cursorIndex = 1;
+    }
     Transform inventoryTransform;
 }
