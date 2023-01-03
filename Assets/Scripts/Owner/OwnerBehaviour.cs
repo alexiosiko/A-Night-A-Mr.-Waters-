@@ -7,11 +7,15 @@ public class OwnerBehaviour : MonoBehaviour
 {
     void Update()
     {
+        // Debug drawline destination
+        Debug.DrawLine(transform.position, nav.destination, Color.yellow);
+
 
         // Check to see if player is within reach, and if so swing, and then after
         // he finished swinging, check again if in reach to see if we should
         // damage the player
         CheckToSwingAtPlayer();
+
 
         // Input for debugging different destinations for owner to navgivate to
         if (Input.GetKeyDown(KeyCode.M))
@@ -29,8 +33,7 @@ public class OwnerBehaviour : MonoBehaviour
         // the animation and run speed
         CheckIfChasePlayer();
 
-        // Debug drawline destination
-        Debug.DrawLine(transform.position, nav.destination, Color.yellow);
+
     }
     void CheckToSwingAtPlayer()
     {
@@ -39,29 +42,25 @@ public class OwnerBehaviour : MonoBehaviour
         if (PlayerIsWithinReach(0.5f) == true)
             // Swing
             if (swinging == false)
-                StartCoroutine(HitPlayerAtEndOfSwing(swingTime));
+                StartCoroutine(Swing());
     }
-    public float swingTime = 0.5f;
     bool swinging = false;
-    IEnumerator HitPlayerAtEndOfSwing(float swingTime)
+    IEnumerator Swing()
     {
         swinging = true;
 
-        // Freeze character for x seconds
-        Freeze(swingTime + 0.2f);
-
-        // Owner animation m,
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("attack") == false)
-            animator.CrossFade("attack", 0.2f);
+        // Freeze owner
+        Freeze(0.5f);
+        
+        // Animate owner
+        animator.Play("attack");
 
         // Swing time
-        yield return new WaitForSeconds(swingTime);
-        
-        // If after swing time, player is still in reach then thatmeans
-        // owner has it player so deal damage
-        // Btw this swing is farther than when we checked if player was in front
-        if (PlayerIsWithinReach(1) == true)
-            playerHealth.RemoveHealth(30f);
+        yield return new WaitForSeconds(0.5f);
+        playerHealth.ChangeHealth(-20f);
+
+        // Recover time
+        yield return new WaitForSeconds(0.5f);
 
         swinging = false;
     }

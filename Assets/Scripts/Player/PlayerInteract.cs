@@ -25,21 +25,24 @@ public class PlayerInteract : MonoBehaviour
     }
     void Highlight()
     {
-        if (Physics.Raycast(cameraPosition.position, cameraPosition.transform.forward, out RaycastHit hit, reachDistance, LayerMask.GetMask("Interactable")))
+        if (Physics.Raycast(cameraPosition.position, cameraPosition.transform.forward, out RaycastHit hit, reachDistance))
         {
             Interactable i = hit.collider.GetComponentInParent<Interactable>();
-            StatusManager.instance.ChangeCrosshair(i.cursorIndex);
+            if (i != null)
+                StatusManager.instance.ChangeCrosshair(i.cursorIndex);
+            else
+                StatusManager.instance.ChangeCrosshair(0);
         }
         else
             StatusManager.instance.ChangeCrosshair(0);
-
     }
     void Interact()
     {
-        if (Physics.Raycast(cameraPosition.position, cameraPosition.transform.forward, out RaycastHit hit, reachDistance, LayerMask.GetMask("Interactable")))
+        if (Physics.Raycast(cameraPosition.position, cameraPosition.transform.forward, out RaycastHit hit, reachDistance))
         {
             Interactable i = hit.collider.GetComponentInParent<Interactable>();
-            i.Action();
+            if (i != null)
+                i.Action();
         }
     }
 
