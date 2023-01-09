@@ -50,17 +50,17 @@ public class OwnerBehaviour : MonoBehaviour
         swinging = true;
 
         // Freeze owner
-        Freeze(0.5f);
+        Freeze(0.5f + 0.5f); // From Line A + Line B
         
         // Animate owner
         animator.Play("attack");
 
         // Swing time
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f); // Line A
         playerHealth.ChangeHealth(-20f);
 
         // Recover time
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f); // Line B
 
         swinging = false;
     }

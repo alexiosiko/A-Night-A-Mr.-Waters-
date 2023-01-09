@@ -44,7 +44,7 @@ public class PlayerInventory : MonoBehaviour
     {
         transform.GetChild(index).localPosition = positionToTheSide;
     }
-    void ShowNextItem()
+    public void ShowNextItem()
     {
         transform.GetChild(index).localPosition = Vector3.zero;
     }

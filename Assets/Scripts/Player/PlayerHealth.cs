@@ -39,9 +39,25 @@ public class PlayerHealth : MonoBehaviour
         // We range between [50, 100]
         // I use this because i
         if (health < 0)
+        {
             health = 0;
+
+            StartCoroutine(KillPlayer());
+        }
         else if (health > 50)
             health = 50;
+    }
+    IEnumerator KillPlayer()
+    {
+        // Death animation
+        animator.Play("die");
+
+        // Freeze character movements
+        StatusManager.instance.freeze = false;
+
+        yield return new WaitForSeconds(2f);
+
+        CanvasManager.instance.ShowDeathScreen();
     }
     void UpdateDamageSprite()
     {
@@ -56,5 +72,11 @@ public class PlayerHealth : MonoBehaviour
     {
         UpdateDamageSprite();
     }
+
+    void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+    Animator animator;
     public Image damageSprite;
 }

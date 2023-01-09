@@ -15,6 +15,10 @@ public class Collectable : Interactable
 
         // Move to position
         transform.localPosition = PlayerInventory.instance.positionToTheSide;
+
+        // Call this function so we can update what object is currently or is NOT 
+        // currently in player's hand
+        PlayerInventory.instance.ShowNextItem();
     }
     void Awake()
     {

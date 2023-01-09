@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Door : Interactable
 {
@@ -58,14 +59,26 @@ public class Door : Interactable
     void ChangeDoorStatus()
     {
         if (opened == true)
+        {
             opened = false;
+
+            // This is for AI for owner
+            nav.carving = false;
+        }
         else
+        {            
             opened = true;
+
+            // This is for AI for owner
+            nav.carving = true;
+        }
     }
-    void Start()
+    void Awake()
     {
         animator = GetComponentInParent<Animator>();
         cursorIndex = 4;
+        nav = GetComponent<NavMeshObstacle>();
     }
+    NavMeshObstacle nav;
     Animator animator;
 }
