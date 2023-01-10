@@ -13,12 +13,10 @@ public class Hideable : Interactable
         if (StatusManager.instance.currentHiddenGameObject == null)
             EnterHide();
     }
-    
-    
     public void ExitHide()
     {
         // Enable player collider
-        playerCollider.enabled = true;
+        playerController.enabled = true;
 
         // Change crosshair
         StatusManager.instance.ChangeCrosshair(0);
@@ -48,8 +46,8 @@ public class Hideable : Interactable
         beforeHideRotation = player.transform.eulerAngles;
 
         // Disable player collider if not seen
-        if (ownerMovement.canSeePlayer == false)
-            playerCollider.enabled = false;
+        if (OwnerBehaviour.instance.CanSeePlayer() == false)
+            playerController.enabled = false;
 
         // Change crosshair
         StatusManager.instance.ChangeCrosshair(3);
@@ -73,18 +71,16 @@ public class Hideable : Interactable
 
     void Start()
     {
-        playerCollider = GameObject.FindWithTag("Player").GetComponent<Collider>();
+        playerController = GameObject.FindWithTag("Player").GetComponent<Collider>();
         spot = transform.GetChild(0).transform;
         player = GameObject.FindWithTag("Player").transform;
         volume = FindObjectOfType<Volume>();
-        ownerMovement = FindObjectOfType<OwnerBehaviour>();
 
         cursorIndex = 2;
     }
-    OwnerBehaviour ownerMovement;
     Volume volume;
     Transform player;
     Transform spot;
-    Collider playerCollider;
+    Collider playerController;
     
 }

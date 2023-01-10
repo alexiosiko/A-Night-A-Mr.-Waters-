@@ -129,7 +129,8 @@ GameObject:
   - component: {fileID: 7964446440262534754}
   - component: {fileID: 153792398}
   - component: {fileID: 153792390}
-  m_Layer: 0
+  - component: {fileID: 1480322471}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -230,6 +231,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 50
   damageSprite: {fileID: 0}
+--- !u!95 &1480322471
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7964446440262534755}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: de50d81d1fb619842b912cbc0af15af9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &7964446440474018462
 GameObject:
   m_ObjectHideFlags: 0

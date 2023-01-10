@@ -33,7 +33,28 @@ public class OwnerBehaviour : MonoBehaviour
         // the animation and run speed
         CheckIfChasePlayer();
 
+        // Check if found player that is hidden
+        CheckIfFoundPlayer();
 
+
+    }
+    void CheckIfFoundPlayer()
+    {
+        // if (swinging == true || nav.isStopped == true)
+        //     return;
+//dsa
+        // if (StatusManager.instance.currentHiddenGameObject == null)
+        //     return;
+
+        Vector3 rayDirectionToPlayer = player.position - transform.position;
+        if (Physics.SphereCast(transform.position, 1f, rayDirectionToPlayer, out RaycastHit hit, 1f, LayerMask.GetMask("Player")))
+        {
+            print(hit.collider.name);
+            if (StatusManager.instance.currentHiddenGameObject != null)
+                StatusManager.instance.currentHiddenGameObject.GetComponent<Hideable>().ExitHide();
+
+        }
+        
     }
     void CheckToSwingAtPlayer()
     {
@@ -66,7 +87,7 @@ public class OwnerBehaviour : MonoBehaviour
     }
     bool PlayerIsWithinReach(float reachMultiplier)
     {
-        if (Physics.SphereCast(transform.position, 1f, transform.forward * reachMultiplier, out RaycastHit hit, 1f) == true)
+        if (Physics.SphereCast(transform.position, 1f, transform.forward, out RaycastHit hit, 1f * reachMultiplier) == true)
             if (hit.collider.gameObject.tag == "Player")
                 return true;
         return false;   
@@ -113,13 +134,12 @@ public class OwnerBehaviour : MonoBehaviour
             animator.SetBool("walk", true);
         }
     }
-    [HideInInspector] public bool canSeePlayer = false;
     bool chasePlayer = false;
-    bool CanSeePlayer()
+    public bool CanSeePlayer()
     {
-        Vector3 rayDirection = player.position - transform.position;
+        Vector3 rayDirectionToPlayer = player.position - transform.position;
 
-        if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hit))
+        if (Physics.Raycast(transform.position, rayDirectionToPlayer, out RaycastHit hit))
         {
             // Check to see if player is in owners field of view
             float fieldOfViewValue = GetFieldOfViewValue();
@@ -174,6 +194,17 @@ public class OwnerBehaviour : MonoBehaviour
     }
     public Transform destinationsParent;
     Transform[] destinations;
+    public void Function(Vector3 vector)
+    {
+
+    }
+    public void SetDestination(Vector3 position)
+    {
+        nav.SetDestination(position);
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle") == true)
+            animator.CrossFade("walk", 0.2f);
+    }
     void SetRandomDestination()
     {
         // If currently chasing player, don't set a new destination
@@ -225,8 +256,11 @@ public class OwnerBehaviour : MonoBehaviour
         SetRandomDestination();
     }
     IEnumerator agroLossCoroutine;
+    public static OwnerBehaviour instance;
     void Awake()
     {
+        instance = this;
+
         nav = GetComponent<NavMeshAgent>();
 
             // Store destinations
@@ -242,6 +276,14 @@ public class OwnerBehaviour : MonoBehaviour
     Animator animator;
     void OnDrawGizmos()
     {
+        // Owner attack radius
         Gizmos.DrawWireSphere(transform.position + transform.forward * 1, 1f);    
+    
+        // Owner grab radius for when player in hiding
+        if (player != null)
+        {
+            Vector3 rayDirectionToPlayer = player.position - transform.position;
+            Gizmos.DrawSphere(transform.position + rayDirectionToPlayer.normalized * 1f, 1f);
+        }
     }
 }

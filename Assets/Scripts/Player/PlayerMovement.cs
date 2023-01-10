@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
     public float sprintSpeed = 5f;
+    [HideInInspector] public bool freeze = false;
     float speedBoost = 1f;
     Vector3 velocity;
     [SerializeField] Vector3 move = Vector3.zero;
@@ -23,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         
         // If controller is disabled (Basically means if hidden)
-        if (controller.enabled == false)
+        if (freeze == true)
             return;
             
         // Don't ask me i copied this from somewhere

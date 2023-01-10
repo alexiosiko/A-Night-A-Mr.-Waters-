@@ -44,8 +44,11 @@ public class Door : Interactable
             {
                 
             }
-
         }
+    }
+    public void Unlock()
+    {
+        locked = false;
     }
     public void OpenDoor()
     {
