@@ -29,7 +29,13 @@ public class Door : Interactable
             
             // If empty hand, do NOTHING    
             if (currentItem == null)
+            {
+                if (keyName != "")
+                    CanvasManager.instance.Alert("This door requires " + keyName + " ...");
+                else
+                    CanvasManager.instance.Alert("This door won't budge ...");  
                 return;
+            }
 
             Collectable collectable = currentItem.GetComponent<Collectable>();
             if (collectable.itemId == keyName)
@@ -39,10 +45,16 @@ public class Door : Interactable
 
                 // Delete item
                 PlayerInventory.instance.DestoryCurrentItem();
+                
+                // Canvas
+                CanvasManager.instance.Alert("This key fits!");
             }
             else // Wiggle door
             {
-                
+                if (keyName != null)
+                    CanvasManager.instance.Alert("This door requires " + keyName + " ...");
+                else
+                    CanvasManager.instance.Alert("This door won't budge ...");
             }
         }
     }

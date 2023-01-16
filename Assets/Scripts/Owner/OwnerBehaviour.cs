@@ -5,11 +5,17 @@ using UnityEngine.AI;
 
 public class OwnerBehaviour : MonoBehaviour
 {
+    public AudioSource jinglebells;
+    public AudioSource talkSource;
+    public AudioClip[] talkingClips;
     void Update()
     {
+        // Debug audio
+        if (Input.GetKeyDown(KeyCode.P))
+            PlayRandomAudio();
+
         // Debug drawline destination
         Debug.DrawLine(transform.position, nav.destination, Color.yellow);
-
 
         // Check to see if player is within reach, and if so swing, and then after
         // he finished swinging, check again if in reach to see if we should
@@ -49,12 +55,9 @@ public class OwnerBehaviour : MonoBehaviour
         Vector3 rayDirectionToPlayer = player.position - transform.position;
         if (Physics.SphereCast(transform.position, 1f, rayDirectionToPlayer, out RaycastHit hit, 1f, LayerMask.GetMask("Player")))
         {
-            print(hit.collider.name);
             if (StatusManager.instance.currentHiddenGameObject != null)
                 StatusManager.instance.currentHiddenGameObject.GetComponent<Hideable>().ExitHide();
-
         }
-        
     }
     void CheckToSwingAtPlayer()
     {
@@ -75,6 +78,8 @@ public class OwnerBehaviour : MonoBehaviour
         
         // Animate owner
         animator.Play("attack");
+
+        
 
         // Swing time
         yield return new WaitForSeconds(0.5f); // Line A
@@ -121,17 +126,16 @@ public class OwnerBehaviour : MonoBehaviour
             animator.SetBool("walk faster", true);
             animator.SetBool("walk", false);
 
+            // Audio
+            if (jinglebells.isPlaying == false)
+                jinglebells.Play();
+
             // Owner destination
             nav.SetDestination(player.position);
         }
         else
         {
-            // Owned default speed
-            nav.speed = defaultSpeed;
-
-            // Owner animation
-            animator.SetBool("walk faster", false);
-            animator.SetBool("walk", true);
+            // Nothing
         }
     }
     bool chasePlayer = false;
@@ -153,6 +157,8 @@ public class OwnerBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
         chasePlayer = false;
+
+        
     }
     float GetFieldOfViewValue()
     {
@@ -166,12 +172,30 @@ public class OwnerBehaviour : MonoBehaviour
         // Ignore the y value
         Vector2 start = new Vector2(transform.position.x, transform.position.z);
         Vector2 end = new Vector2(nav.destination.x, nav.destination.z);
+
+
+        
         
         if (Vector2.Distance(start, end) < 1)
         {
             SetRandomDestination();
-            // Invoke("SetRandomDestination", Random.Range(3f, 7.5f));
+            Walk();
         }
+    }
+    void Walk()
+    {
+        if (chasePlayer == true)
+            return;
+        // Owned default speed
+            nav.speed = defaultSpeed;
+
+        // Audio
+        if (jinglebells.isPlaying == true)
+            jinglebells.Stop();
+
+        // Owner animation
+        animator.SetBool("walk faster", false);
+        animator.SetBool("walk", true);
     }
     public void Freeze(float time)
     {
@@ -183,7 +207,7 @@ public class OwnerBehaviour : MonoBehaviour
         // velocity to navigation unity so i set velocity to zero
         // in next step
         nav.isStopped = true;
-     
+
         // Set owner velocity to ZEROOO
         nav.velocity = Vector3.zero;
 
@@ -194,10 +218,6 @@ public class OwnerBehaviour : MonoBehaviour
     }
     public Transform destinationsParent;
     Transform[] destinations;
-    public void Function(Vector3 vector)
-    {
-
-    }
     public void SetDestination(Vector3 position)
     {
         nav.SetDestination(position);
@@ -215,6 +235,8 @@ public class OwnerBehaviour : MonoBehaviour
 
         int index = Random.Range(0, destinations.Length);
         nav.SetDestination(destinations[index].position );
+
+        
 
         // If idleing, then start walk animation. If we are NOT idleing, 
         // that means we must be chasing the player or something else so
@@ -235,6 +257,10 @@ public class OwnerBehaviour : MonoBehaviour
         // Store the current position as previous position
         previousPositionToCheckWhenStuck = transform.position;
     }
+    public void EnableSelf()
+    {
+        enabled = true;
+    }
     float defaultSpeed;
     [SerializeField] float chaseSpeed = 4f;
     void Start()
@@ -252,8 +278,8 @@ public class OwnerBehaviour : MonoBehaviour
         // Store default speed
         defaultSpeed = nav.speed;
 
-        // Start him with a random destination path
-        SetRandomDestination();
+
+        InvokeRepeating("PlayRandomAudio", 5, 2f);
     }
     IEnumerator agroLossCoroutine;
     public static OwnerBehaviour instance;
@@ -274,6 +300,15 @@ public class OwnerBehaviour : MonoBehaviour
     Transform player;
     NavMeshAgent nav;
     Animator animator;
+    void PlayRandomAudio()
+    {
+        if (Random.Range(0, 4) != 0)
+            return;
+        int max = talkingClips.Length;
+        int randomIndex = Random.Range(0, max);
+        talkSource.clip = talkingClips[randomIndex];
+        talkSource.Play();
+    }
     void OnDrawGizmos()
     {
         // Owner attack radius

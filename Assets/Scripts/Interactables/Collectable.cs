@@ -19,6 +19,9 @@ public class Collectable : Interactable
         // Call this function so we can update what object is currently or is NOT 
         // currently in player's hand
         PlayerInventory.instance.ShowNextItem();
+
+        // Canvas
+        CanvasManager.instance.Alert("You pick up " + itemId + " ...");
     }
     void Awake()
     {
@@ -28,5 +31,5 @@ public class Collectable : Interactable
     {
         cursorIndex = 1;
     }
-    Transform inventoryTransform;
+    protected Transform inventoryTransform;
 }
