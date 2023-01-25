@@ -22,6 +22,8 @@ public class Collectable : Interactable
 
         // Canvas
         CanvasManager.instance.Alert("You pick up " + itemId + " ...");
+
+        AudioManager.instance.PlaySoundEffect("pickup");
     }
     void Awake()
     {

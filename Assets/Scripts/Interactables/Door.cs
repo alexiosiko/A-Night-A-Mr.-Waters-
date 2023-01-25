@@ -8,6 +8,8 @@ public class Door : Interactable
     public bool locked = false;
     public string keyName = "";
     public bool opened = false;
+    public AudioClip doorOpen;
+    public AudioClip doorClose;
     public override void Action()
     {
         if (locked == false) // Is not locked
@@ -15,11 +17,21 @@ public class Door : Interactable
             if (opened == false) // Open door
             {
                 animator.Play("Open");
+
+                // Audio
+                audioSource.clip = doorOpen;
+                audioSource.Play();
+                
                 Invoke("ChangeDoorStatus", 0.4f); // 0.4f is door animation time
             }
             else // Close door
             {
                 animator.Play("Close");
+
+                // Audio
+                audioSource.clip = doorClose;
+                audioSource.PlayDelayed(0.2f);
+
                 Invoke("ChangeDoorStatus", 0.4f); // 0.4f is door animation time
             }
         }
@@ -93,7 +105,9 @@ public class Door : Interactable
         animator = GetComponentInParent<Animator>();
         cursorIndex = 4;
         nav = GetComponent<NavMeshObstacle>();
+        audioSource = GetComponent<AudioSource>();
     }
+    AudioSource audioSource;
     NavMeshObstacle nav;
     Animator animator;
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
+    public AudioSource footStepsSource;
     public float baseSpeed = 12f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
@@ -42,6 +43,11 @@ public class PlayerMovement : MonoBehaviour
 
         move = transform.right * x + transform.forward * z;
         controller.Move (move * (baseSpeed + speedBoost) * Time.deltaTime);
+
+        if (move != Vector3.zero && footStepsSource.isPlaying == false)
+            footStepsSource.Play();
+        else if (move == Vector3.zero && footStepsSource.isPlaying == true)
+            footStepsSource.Stop();
 
         if (Input.GetButtonDown("Jump") && controller.isGrounded)
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);

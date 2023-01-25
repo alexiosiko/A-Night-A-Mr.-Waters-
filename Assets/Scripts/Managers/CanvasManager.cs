@@ -4,29 +4,70 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
-using UnityEngine.Internal;
 
 public class CanvasManager : MonoBehaviour
 {
     [SerializeField] TMP_Text alertText;
-    public void Alert(string text, float waitTime)
+    public void Alert(string text, float waitTime = 2f, bool useBlackScreen = false)
     {
+        print("starting alert1");
         StopAllCoroutines();
-        StartCoroutine(AlertCoroutine(text, waitTime));
+        StartCoroutine(AlertCoroutine(text, waitTime, useBlackScreen));
     }
-    public void Alert(string text)
+    public void Alert(string[] texts, float waitTime = 2f, bool useBlackScreen = false)
     {
+        alertText.DOKill();
         StopAllCoroutines();
-        StartCoroutine(AlertCoroutine(text, 2f));
+        StartCoroutine(AlertCoroutine(texts, waitTime, useBlackScreen));
     }
-    IEnumerator AlertCoroutine(string text, float waitTime)
+    IEnumerator AlertCoroutine(string text, float waitTime, bool useBlackScreen = false)
     {
-        alertText.DOFade(0, 0);
+        // Reset text
+        alertText.alpha = 0;
+        
         alertText.text = text;
-        alertText.DOFade(1, 0.7f);
+        if (useBlackScreen == true)
+        {
+            blackScreen.DOFade(1, 0.7f);
+            yield return new WaitForSeconds(1f);
+        }
+
+
+        alertText.DOFade(1, 1f);
+
         yield return new WaitForSeconds(waitTime);
-        alertText.DOFade(0, 0.7f);
+
+        alertText.DOFade(0, 1f);
+
+        yield return new WaitForSeconds(1f);
+
+        if (useBlackScreen == true)
+            blackScreen.DOFade(0, 0.7f);
     }
+    IEnumerator AlertCoroutine(string[] texts, float waitTime, bool useBlackScreen = false)
+    {
+        // Reset text
+        alertText.alpha = 0;
+
+        if (useBlackScreen == true)
+            blackScreen.DOFade(1, 0.7f);
+
+        for (int i = 0; i < texts.Length; i++)
+        {
+            alertText.text = texts[i];
+            alertText.DOFade(1, 1f);
+
+            yield return new WaitForSeconds(waitTime + 1f);
+
+            alertText.DOFade(0, 1f);
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        if (useBlackScreen == true)
+            blackScreen.DOFade(0, 0.7f);
+    }
+    [SerializeField] Image blackScreen;
     public Image damageSprite;
     public void UpdateDamageSprite(float health)
     {

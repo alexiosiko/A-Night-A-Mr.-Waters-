@@ -1,13 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class OwnerBehaviour : MonoBehaviour
 {
-    public AudioSource jinglebells;
+    public AudioSource jinglebellsSource;
     public AudioSource talkSource;
+    public AudioSource gruntSource;
+    public AudioSource footStepsSource;
     public AudioClip[] talkingClips;
+    public AudioClip[] gruntingClips;
     void Update()
     {
         // Debug audio
@@ -42,7 +44,16 @@ public class OwnerBehaviour : MonoBehaviour
         // Check if found player that is hidden
         CheckIfFoundPlayer();
 
+        // Play footsteps sound effect
+        FootStepSounds();
 
+    }
+    void FootStepSounds()
+    {
+        if (nav.isStopped == false && footStepsSource.isPlaying == false)
+            footStepsSource.Play();
+        else if (nav.isStopped == true && footStepsSource.isPlaying == true)
+            footStepsSource.Stop();
     }
     void CheckIfFoundPlayer()
     {
@@ -79,7 +90,8 @@ public class OwnerBehaviour : MonoBehaviour
         // Animate owner
         animator.Play("attack");
 
-        
+        // Play grunt
+        PlayRandomGruntAudio();
 
         // Swing time
         yield return new WaitForSeconds(0.5f); // Line A
@@ -89,6 +101,12 @@ public class OwnerBehaviour : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Line B
 
         swinging = false;
+    }
+    void PlayRandomGruntAudio()
+    {
+        int randomIndex = Random.Range(0, gruntingClips.Length);
+        gruntSource.clip = gruntingClips[randomIndex];
+        gruntSource.Play();
     }
     bool PlayerIsWithinReach(float reachMultiplier)
     {
@@ -103,6 +121,8 @@ public class OwnerBehaviour : MonoBehaviour
         if (CanSeePlayer() == true)
         {
             chasePlayer = true;
+            if (AudioManager.instance.IsPlaying("chaseMusic") == false)
+                AudioManager.instance.PlayMusic("chaseMusic");
 
             // Erase agro coroutine
             agroLossCoroutine = null;
@@ -127,11 +147,12 @@ public class OwnerBehaviour : MonoBehaviour
             animator.SetBool("walk", false);
 
             // Audio
-            if (jinglebells.isPlaying == false)
-                jinglebells.Play();
+            if (jinglebellsSource.isPlaying == false)
+                jinglebellsSource.Play();
 
             // Owner destination
             nav.SetDestination(player.position);
+
         }
         else
         {
@@ -157,6 +178,7 @@ public class OwnerBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
         chasePlayer = false;
+        
 
         
     }
@@ -190,8 +212,11 @@ public class OwnerBehaviour : MonoBehaviour
             nav.speed = defaultSpeed;
 
         // Audio
-        if (jinglebells.isPlaying == true)
-            jinglebells.Stop();
+        if (jinglebellsSource.isPlaying == true)
+        {
+            jinglebellsSource.Stop();
+            AudioManager.instance.StopMusic("mainMusic");
+        }
 
         // Owner animation
         animator.SetBool("walk faster", false);
@@ -279,7 +304,7 @@ public class OwnerBehaviour : MonoBehaviour
         defaultSpeed = nav.speed;
 
 
-        InvokeRepeating("PlayRandomAudio", 5, 2f);
+        InvokeRepeating("PlayRandomAudio", 5, 4f);
     }
     IEnumerator agroLossCoroutine;
     public static OwnerBehaviour instance;
@@ -302,12 +327,17 @@ public class OwnerBehaviour : MonoBehaviour
     Animator animator;
     void PlayRandomAudio()
     {
-        if (Random.Range(0, 4) != 0)
+        if (Random.Range(0, 3) != 0)
             return;
         int max = talkingClips.Length;
         int randomIndex = Random.Range(0, max);
         talkSource.clip = talkingClips[randomIndex];
         talkSource.Play();
+    }
+    void OnDestroy()
+    {
+        jinglebellsSource.Stop(); 
+        StopAllCoroutines();    
     }
     void OnDrawGizmos()
     {
