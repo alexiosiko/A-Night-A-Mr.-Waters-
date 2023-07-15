@@ -10,7 +10,6 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] TMP_Text alertText;
     public void Alert(string text, float waitTime = 2f, bool useBlackScreen = false)
     {
-        print("starting alert1");
         StopAllCoroutines();
         StartCoroutine(AlertCoroutine(text, waitTime, useBlackScreen));
     }

@@ -68,6 +68,11 @@ public class OwnerInteractable : Interactable
     {
         die = true;
         cursorIndex = 1;
+
+		// Stop jingleBells
+        OwnerBehaviour ownerBehaviour = GetComponent<OwnerBehaviour>();
+		ownerBehaviour.jinglebellsSource.enabled = false;
+
     }
     void Awake()
     {

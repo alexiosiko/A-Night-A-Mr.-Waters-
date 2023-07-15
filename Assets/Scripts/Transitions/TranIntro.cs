@@ -10,7 +10,7 @@ public class TranIntro : MonoBehaviour
     public string[] texts;
     void Start()
     {
-        StartCoroutine(AlertCoroutine(texts, 4f));
+        StartCoroutine(AlertCoroutine(texts, 5f));
     }
     [SerializeField] TMP_Text alertText;
     [SerializeField] Image blackScreen;

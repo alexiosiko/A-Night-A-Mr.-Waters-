@@ -8,6 +8,7 @@ public class FrontDoor : Interactable
     public bool locked = false;
     public string keyName = "";
     public bool opened = false;
+	[SerializeField] GameObject winScreen;
     public override void Action()
     {
         if (locked == false) // Is not locked
@@ -80,6 +81,7 @@ public class FrontDoor : Interactable
         else
         {            
             opened = true;
+			winScreen.SetActive(true);
         }
     }
     void Awake()

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,15 +8,17 @@ public class Door : Interactable
     public bool opened = false;
     public AudioClip doorOpen;
     public AudioClip doorClose;
+    public AudioClip pullDoorLocked;
     public override void Action()
     {
-        if (locked == false) // Is not locked
+		if (locked == false) // Is not locked
         {
             if (opened == false) // Open door
             {
                 animator.Play("Open");
 
                 // Audio
+
                 audioSource.clip = doorOpen;
                 audioSource.Play();
                 
@@ -46,6 +46,10 @@ public class Door : Interactable
                     CanvasManager.instance.Alert("This door requires " + keyName + " ...");
                 else
                     CanvasManager.instance.Alert("This door won't budge ...");  
+
+				audioSource.clip = pullDoorLocked;
+				audioSource.Play();
+
                 return;
             }
 
@@ -60,6 +64,9 @@ public class Door : Interactable
                 
                 // Canvas
                 CanvasManager.instance.Alert("This key fits!");
+
+				audioSource.clip = pullDoorLocked;
+				audioSource.Play();
             }
             else // Wiggle door
             {
@@ -67,6 +74,10 @@ public class Door : Interactable
                     CanvasManager.instance.Alert("This door requires " + keyName + " ...");
                 else
                     CanvasManager.instance.Alert("This door won't budge ...");
+
+
+				audioSource.clip = pullDoorLocked;
+				audioSource.Play();
             }
         }
     }
@@ -107,7 +118,7 @@ public class Door : Interactable
         nav = GetComponent<NavMeshObstacle>();
         audioSource = GetComponent<AudioSource>();
     }
-    AudioSource audioSource;
+    [SerializeField] AudioSource audioSource;
     NavMeshObstacle nav;
     Animator animator;
 }
